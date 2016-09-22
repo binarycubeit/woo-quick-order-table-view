@@ -1,0 +1,163 @@
+
+/* Plugin Name:Woo Quick Order Table View
+Description: All Products of woocommerce store will be showed in table with featured image,title,price,add to cart button.Also have pop up with all details of the products when click on image.
+Version 1.1
+Author: Abu Rayhan
+Author URI: http://binarycubeit.com/ */
+
+
+table.quick-order {
+  border: 1px solid #cccccc;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.quick-order td:nth-child(3) {
+  text-align: center;
+}
+
+.quick-order .quantity {
+    float: left;
+    margin-left: 25px;
+    max-width: 70px;
+}
+
+.input-text.qty.text {
+  border: 1px solid #cccccc;
+  padding: 8px 6px;
+  width: 70px;
+}
+
+.quick-order .single_add_to_cart_button.button.alt {
+  background: #1a1a1a none repeat scroll 0 0;
+  border: 0 none;
+  border-radius: 2px;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.046875em;
+  line-height: 1;
+  margin-left: 23px;
+  padding: 0.84375em 0.875em 0.78125em;
+  text-transform: uppercase;
+}
+
+table.quick-order tr td, table.quick-order tr th {
+  border: 1px solid #cccccc;
+  padding: 8px 10px;
+}
+
+.quick-order .normal_thumnail img {
+    width: 60px;
+}
+.quick-order th:first-child {
+    text-align: center;
+    width: 10%;
+}
+.quick-order th:nth-child(2) {
+    text-align: center;
+    width: 50%;
+}
+.quick-order th:nth-child(3) {
+    text-align: center;
+    width: 10%;
+}
+.quick-order th:nth-child(4) {
+    text-align: center;
+    width: 20%;
+}
+.quick-order thead {
+    background: #eee none repeat scroll 0 0;
+}
+@media all {
+    .lightbox {
+        display: none;
+    }
+    .fl-page h1,
+    .fl-page h3,
+    .fl-page h4 {
+        font-weight: 100;
+        letter-spacing: 1px;
+    }
+    .fl-page h1 {
+        font-size: 110px;
+        margin-bottom: 0.5em;
+    }
+    .fl-page h1 i {
+        font-style: normal;
+        color: #ddd;
+    }
+    .fl-page h1 span {
+        font-size: 30px;
+        color: #333;
+    }
+    .fl-page h3 {
+        text-align: right;
+    }
+    .fl-page h3 {
+        font-size: 15px;
+    }
+    .fl-page h4 {
+        font-size: 2em;
+    }
+    .fl-page .jumbotron {
+        margin-top: 2em;
+    }
+    .fl-page .doc {
+        margin: 2em 0;
+    }
+    .fl-page .btn-download {
+        float: right;
+    }
+    .fl-page .btn-default {
+        vertical-align: bottom;
+    }
+    .fl-page .btn-lg span {
+        font-size: 0.7em;
+    }
+    .fl-page .footer {
+        margin-top: 3em;
+        color: #aaa;
+        font-size: 0.9em;
+    }
+    .fl-page .footer a {
+        color: #999;
+        text-decoration: none;
+        margin-right: 0.75em;
+    }
+    .fl-page .github {
+        margin: 2em 0;
+    }
+    .fl-page .github a {
+        vertical-align: top;
+    }
+    .fl-page .marketing a {
+        color: #999;
+    }
+    /* override default feather style... */
+    
+    .fixwidth {
+        background: rgba(256, 256, 256, 0.8);
+    }
+    .fixwidth .featherlight-content {
+        width: 500px;
+        padding: 25px;
+        color: #fff;
+        background: #111;
+    }
+    .fixwidth .featherlight-close {
+        color: #fff;
+        background: #333;
+    }
+}
+@media(max-width: 768px) {
+    .fl-page h1 span {
+        display: block;
+    }
+    .fl-page .btn-download {
+        float: none;
+        margin-bottom: 1em;
+    }
+}
