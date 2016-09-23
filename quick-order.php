@@ -64,7 +64,7 @@ function woo_qotv(){?>
 </thead>
 </tr>
 
-<?php  $args = array( 'post_type' => 'product','posts_per_page' =>'', 'orderby' =>'date','order' => 'DESC' );
+<?php  $args = array( 'post_type' => 'product', 'orderby' =>'date','order' => 'DESC' );
         $loop = new WP_Query( $args );
         while ( $loop->have_posts() ) : $loop->the_post(); global $product; ?>
 <tr>
@@ -112,10 +112,19 @@ function woo_qotv(){?>
 
 
 <?php endwhile; ?>
-<?php wp_reset_query(); ?>
 </table>
 
-<?php }
+<?php
+
+echo "Pagination <hr>";
+
+previous_posts_link( '« Prev' );
+
+next_posts_link("Next »", $loop->max_num_pages);
+
+wp_reset_query();
+
+}
 
 add_shortcode('woo_qotv_code','woo_qotv');
 
