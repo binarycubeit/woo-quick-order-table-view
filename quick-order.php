@@ -1,3 +1,4 @@
+
 <?php
 /*
 Plugin Name:Woo Quick Order Table View
@@ -39,93 +40,94 @@ register_deactivation_hook(__FILE__, 'woo_qotv_deactivation');
 function woo_qotv_activation() {
     
     //actions to perform once on plugin activation go here    
-    	
+        
     //register uninstaller
     register_uninstall_hook(__FILE__, 'woo_qotv_uninstall');
 }
 
 function woo_qotv_uninstall(){
     
-    //actions to perform once on plugin uninstall go here	    
+    //actions to perform once on plugin uninstall go here        
 }
 
 
 
-function woo_qotv(){?>
+function woo_qotv($atts){
+
+extract(shortcode_atts(array(
+        'products_per_page'   => -1,
+        'category'      => '',
+        'orderby'       => 'meta_value_num',
+        'meta_key'      => '_price',
+        'order'         => 'asc',
+        'header_color'   => '#ccc',
+        'table_color'   => '#efefef'
+        ), $atts));
 
 
-<table class="quick-order">
-<tr class="top_part">
-<thead>
-<th ><?php echo('Image'); ?></th>
-<th ><?php echo('Product Name'); ?></th>
-<th ><?php echo('Price'); ?></th>
-<th ><?php echo('Quantity'); ?></th>
-</thead>
-</tr>
 
-<?php  $args = array( 'post_type' => 'product', 'orderby' =>'date','order' => 'DESC' );
-        $loop = new WP_Query( $args );
-        while ( $loop->have_posts() ) : $loop->the_post(); global $product; ?>
-<tr>
-<?php if ( $product->is_in_stock() ) : ?>
-<td><a class="btn btn-default product" href="#" data-featherlight="#product_details_<?php echo $loop->post->ID; ?>"><div class="normal_thumnail"><?php if (has_post_thumbnail( $loop->post->ID )) echo get_the_post_thumbnail($loop->post->ID, 'shop_catalog'); else echo '<img src="'.woocommerce_placeholder_img_src().'"/>'; ?></div></a></td>
-<td><?php the_title(); ?></td>
-<td><?php echo woocommerce_price($product->get_price()); ?></td>
-<td>
+    ?>
 
-	<?php do_action( 'woocommerce_before_add_to_cart_form' ); ?>
+   <?php  wc_print_notices();?>
 
-	<form class="cart_2" method="post" enctype='multipart/form-data'>
-	 	<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
-
-	 	<?php
-	 		if ( ! $product->is_sold_individually() ) {
-	 			woocommerce_quantity_input( array(
-	 				'min_value'   => apply_filters( 'woocommerce_quantity_input_min', 1, $product ),
-	 				'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->backorders_allowed() ? '' : $product->get_stock_quantity(), $product ),
-	 				
-	 			) );
-	 		}
-	 	?><input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
-
-	 <button type="submit" class="single_add_to_cart_button button alt">+</button>
-
-		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-	</form>
-</td>
+    <?php $return_string =' 
+        <table class="quick-order" style="background:'.$table_color.';">
+        <tr class="top_part">
+        <thead style="background:'.$header_color.';">
+        <th>Image</th>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        </thead>
+        </tr>';
+    
+    
+    $args = array( 
+        'post_type' => 'product',
+        'product_cat'=>$category,
+        'posts_per_page' =>$products_per_page,
+        'orderby'   => 'meta_value_num',
+        'meta_key'  => '_price',
+        'order' => $order); 
+         $loop = new WP_Query( $args );
+         while ( $loop->have_posts() ) : $loop->the_post();global $product; 
+         if ( $product->is_in_stock() ) : ?>
+         <?php if ( $product->is_type( 'simple' ) ){?>
 
 
-<div class="lightbox" id="product_details_<?php echo $loop->post->ID; ?>" >
+        <?php $return_string .='<tr>';?>
+        <?php $return_string .='<td><a class="btn btn-default product" href="#" data-featherlight="#product_details_'.$loop->post->ID.'"><div class="normal_thumnail"><img src="'.get_the_post_thumbnail_url( $loop->post->ID).'"></div></a></td>';?>
+        <?php $return_string .='<td>'.get_the_title().'</td>';?>
+        <?php $return_string .='<td>'.woocommerce_price($product->get_price()).'</td>';?> 
+        
+        <?php $return_string .='<td><form class="cart" method="post" enctype="multipart/form-data">
+                                <div class="quantity">
+                                    <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Quantity" class="input-text qty text" size="4" pattern="[0-9]*" inputmode="numeric">
+                                </div>
+                                <input type="hidden" name="add-to-cart" value="'.get_the_ID().'">
+                                    <button type="submit" class="single_add_to_cart_button button alt"><i class="fa fa-cart-plus" aria-hidden="true"></i> +</button>
+                                </form></td>';?>
 
-<div class="light_image"><?php if (has_post_thumbnail( $loop->post->ID )) echo get_the_post_thumbnail($loop->post->ID, 'shop_catalog'); else echo '<img src="'.woocommerce_placeholder_img_src().'"/>'; ?></div>
-<div class="light_details">
-<h2><?php the_title(); ?></h2>
-<div class="description"><?php the_content(); ?></div>
-<p>SKU: <?php echo ( $sku = $product->get_sku() ) ? $sku : __( 'N/A', 'woocommerce' ); ?></p>
-<p>Price: <?php echo woocommerce_price($product->get_price()); ?></p>
-</div
-</div>
-<?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>
-<?php endif; ?>
-</tr>
+        
+        <?php $return_string .='<div class="lightbox" id="product_details_'.$loop->post->ID.'">'; ?>
+        <?php $return_string .='<div class="light_image"><img src="'.get_the_post_thumbnail_url( $loop->post->ID).'"></div>';?>
+        <?php $return_string .='<div class="light_details">';?>
+        <?php $return_string .='<h2>'.get_the_title().'</h2>';?>
+        <?php $return_string .='<div class="description">'.get_the_content().'</div>';?>
+        <?php $return_string .='<p>SKU:'.($sku = $product->get_sku() ).'</p>';?>
+        <?php $return_string .='<p>Price:'.woocommerce_price($product->get_price()).'</p>';?>
+        <?php $return_string .='</div>';?>
+        <?php $return_string .='</div>';?>
+        <?php $return_string .='</tr>'; ?>
 
+        <?php } endif; ?>
+        <?php endwhile; ?>
+        <?php $return_string .='</table>';?> 
+        <?php return $return_string; ?>
 
-<?php endwhile; ?>
-</table>
+        <?php  }
 
-<?php
+        add_shortcode('woo_qotv_code','woo_qotv');
 
-echo "Pagination <hr>";
+        ?>
 
-previous_posts_link( '« Prev' );
-
-next_posts_link("Next »", $loop->max_num_pages);
-
-wp_reset_query();
-
-}
-
-add_shortcode('woo_qotv_code','woo_qotv');
-
-?>
